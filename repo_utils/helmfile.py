@@ -1,8 +1,8 @@
 import logging
 import os
-from docker_image_command import DockerImageCommand
-from shared import logger
-from repo_folders import print_temp_folders_by_glob, remove_temp_folders_by_glob, repo_dir
+from repo_utils.docker_image_command import DockerImageCommand
+from repo_utils.shared import logger
+from repo_utils.repo_folders import print_temp_folders_by_glob, remove_temp_folders_by_glob, repo_dir
 
 class Helmfile:
     def __init__(self, 
