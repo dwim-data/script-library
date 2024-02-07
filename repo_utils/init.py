@@ -1,4 +1,4 @@
-from ensure_pip_installations import ensure_pip_installations
+from repo_utils.ensure_pip_installations import ensure_pip_installations
 
 
 def init(colorama=True, ruamel_yaml=False, pymongo=False):

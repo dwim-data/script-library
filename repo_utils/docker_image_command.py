@@ -1,7 +1,7 @@
 import logging
 import os
-from shared import commander
-from repo_folders import repo_dir
+from repo_utils.shared import commander
+from repo_utils.repo_folders import repo_dir
 
 class DockerImageCommand:
     def __init__(self, 

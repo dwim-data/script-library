@@ -2,13 +2,10 @@ import logging
 import os
 import platform
 import re
-import selectors
-import signal
 import subprocess
 import sys
-from logger import script_logger
+from repo_utils.logger import script_logger
 from colorama import Fore, Style
-
 
 class SystemCommander:
 

@@ -1,11 +1,11 @@
-from init import init
+from repo_utils.init import init
 init()
 
 import os
-from commander import SystemCommander
+from repo_utils.commander import SystemCommander
 
 init()
 commander = SystemCommander()
 
-from logger import script_logger
+from repo_utils.logger import script_logger
 logger = script_logger

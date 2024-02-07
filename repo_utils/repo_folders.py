@@ -3,7 +3,7 @@ import glob
 import os
 from pathlib import Path
 import tempfile
-from shared import logger
+from repo_utils.shared import logger
 
 repo_dir = Path(os.path.dirname(os.path.realpath(__file__))).parent.parent
 temp_dir = Path(os.path.join(repo_dir.absolute(), 'temp'))

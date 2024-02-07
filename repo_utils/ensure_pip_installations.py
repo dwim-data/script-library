@@ -1,4 +1,4 @@
-from logger import internal_logger
+from repo_utils.logger import internal_logger
 import os
 import sys
 import subprocess
