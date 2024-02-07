@@ -1,0 +1,51 @@
+version: 1
+formatters:
+  brief:
+    format: '%(levelname)-8s: %(message)s'
+  commands:
+    format: '%(levelname)-8s: %(message)s'
+  precise:
+    format: '%(asctime)s %(name)-15s %(levelname)-8s %(message)s'
+  simple:
+    format: '%(asctime)s - %(name)-15s - %(levelname)-8s - %(message)s'
+handlers:
+  infoConsole:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: brief
+    stream: ext://sys.stdout
+  debugConsole:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: precise
+    stream: ext://sys.stdout
+  criticalConsole:
+    class: logging.StreamHandler
+    level: CRITICAL
+    formatter: precise
+    stream: ext://sys.stdout
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: simple
+    stream: ext://sys.stdout
+loggers:
+  commands:
+    level: INFO
+    handlers: [ debugConsole ]
+    propagate: no
+  brief:
+    level: INFO
+    handlers: [ infoConsole ]
+    propagate: no
+  precise:
+    level: DEBUG
+    handlers: [ debugConsole ]
+    propagate: no
+  criticalLevel:
+    level: CRITICAL
+    handlers: [ criticalConsole ]
+    propagate: no
+root:
+  level: DEBUG
+  handlers: [console]
