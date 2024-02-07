@@ -1,6 +1,6 @@
 
 from colorama import Fore, Style
-from lib.logger import script_logger
+from logger import script_logger
 
 def as_color(color, msg):
     return f'{color}{msg}{Fore.RESET}'

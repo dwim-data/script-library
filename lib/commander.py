@@ -6,7 +6,7 @@ import selectors
 import signal
 import subprocess
 import sys
-from lib.logger import script_logger
+from logger import script_logger
 from colorama import Fore, Style
 
 
