@@ -6,7 +6,7 @@ import subprocess
 lib_base = os.path.dirname(os.path.abspath(__file__))
 
 
-def ensure_pip_installations(colorama=True, ruamel_yaml=True):
+def ensure_pip_installations(colorama=True, ruamel_yaml=True, pymongo=False):
     try:
         if(colorama):
             import colorama
@@ -14,6 +14,8 @@ def ensure_pip_installations(colorama=True, ruamel_yaml=True):
         import nacl.utils
         if(ruamel_yaml):
             from ruamel.yaml import YAML    
+        if(pymongo):
+            import pymongo
         internal_logger.debug('Found all import packages...')
     except Exception as e:
         requirements_path = os.path.join(lib_base, 'requirements.txt')

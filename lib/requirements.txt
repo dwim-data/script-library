@@ -2,3 +2,4 @@ colorama
 requests
 pynacl
 ruamel.yaml
+pymongo
