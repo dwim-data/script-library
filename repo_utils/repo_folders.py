@@ -5,7 +5,23 @@ from pathlib import Path
 import tempfile
 from repo_utils.shared import logger
 
-repo_dir = Path(os.path.dirname(os.path.realpath(__file__))).parent.parent
+def get_repo_root(at : Path):
+    while(True):
+        if(at.exists):
+            children = glob.glob(f'{at.absolute()}/.git', recursive=False)
+            if(len(children) > 0):
+                logger.debug(f'Found repo root {at.absolute()}')
+                return at
+            else:
+                at = at.parent
+                if(at.as_uri() == "file:///"):
+                    return at
+
+repo_dir = get_repo_root(Path(os.path.dirname(os.path.realpath(__file__))))
+if(repo_dir.absolute().as_uri().endswith("script-library")):
+    # We are within our checked out folder
+    repo_dir = get_repo_root(repo_dir.parent)
+
 temp_dir = Path(os.path.join(repo_dir.absolute(), 'temp'))
 environment_dir = Path(os.path.join(repo_dir.absolute(), 'environments'))
 
