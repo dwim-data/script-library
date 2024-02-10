@@ -3,3 +3,6 @@ requests
 pynacl
 ruamel.yaml
 pymongo
+python-slugify
+bs4
+html5lib
