@@ -20,5 +20,5 @@ class GitUtils:
     
     def get_uncommitted_files(self, folder : str = repo_dir.absolute(), log_level: int = logging.INFO):
         files = commander.exec_system_command('git status --porcelain', folder, log_level=log_level).strip().split('\n')
-        files = [ file.strip().replace('M ','').strip() for file in files ]
+        files = [ file.strip().replace('M ','').strip() for file in files if len(file.strip()) > 0 ]
         return files
