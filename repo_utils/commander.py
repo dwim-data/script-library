@@ -85,7 +85,7 @@ class SystemCommander:
                 "Failed to execute command [{1}] returned: {0}\n{2}{0}"
                 .format(sep, cmd_display, err)) from err
 
-    def exec_system_command_streamed(self, cmd, directory : str = None, env = {}, log_level = logging.DEBUG, privledged = False):
+    def exec_system_command_streamed(self, cmd, directory : str = None, env = {}, log_level = logging.DEBUG, privledged = False, check = True):
         # Remove double spaces
         cmd = re.sub(' +', ' ', cmd)
         if privledged and not self.is_windows():
@@ -107,8 +107,12 @@ class SystemCommander:
             script_logger.log(log_level, f'Executing command [' + cmd_display + ']')
 
             print(Fore.LIGHTBLACK_EX)
-            subprocess.check_call(
-                cmd, shell=True, env=self.get_command_environment(env=env), cwd=directory)
+            if(check):
+                subprocess.check_call(
+                    cmd, shell=True, env=self.get_command_environment(env=env), cwd=directory)
+            else:
+                subprocess.call(
+                    cmd, shell=True, env=self.get_command_environment(env=env), cwd=directory)
             print(Style.RESET_ALL)
         except Exception as err:
             print(Style.RESET_ALL)
