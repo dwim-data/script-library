@@ -62,7 +62,7 @@ class SystemCommander:
             if directory is None or directory == '':
                 directory = os.getcwd()
 
-            script_logger.info(f'Executing command [' + cmd_display + ']')
+            script_logger.log(logging.INFO, f'Executing command [' + cmd_display + ']')
             result = subprocess.run(
                 cmd, shell=True, cwd=directory, env=self.get_command_environment(env=env), check=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             if result.returncode != 0:
@@ -104,7 +104,7 @@ class SystemCommander:
             if directory is None:
                 directory = os.getcwd()
 
-            script_logger.log(log_level, f'Executing command [' + cmd_display + ']')
+            script_logger.log(logging.INFO, f'Executing command [' + cmd_display + ']')
 
             print(Fore.LIGHTBLACK_EX)
             if(check):
