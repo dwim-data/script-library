@@ -17,7 +17,8 @@ def get_repo_root(at : Path):
                 if(at.as_uri() == "file:///"):
                     return at
 
-repo_dir = get_repo_root(Path(os.path.dirname(os.path.realpath(__file__))))
+
+repo_dir = get_repo_root(Path(os.path.dirname(os.path.realpath(__file__)))) if os.environ['REPO_DIR'] == None else Path(os.environ['REPO_DIR'])
 if(repo_dir.absolute().as_uri().endswith("script-library")):
     # We are within our checked out folder
     repo_dir = get_repo_root(repo_dir.parent)

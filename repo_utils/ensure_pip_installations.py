@@ -6,12 +6,14 @@ import subprocess
 lib_base = os.path.dirname(os.path.abspath(__file__))
 
 
-def ensure_pip_installations(colorama=True, ruamel_yaml=True, pymongo=False, slugify=False, beautiful_soup=False):
+def ensure_pip_installations(colorama=True, ruamel_yaml=True, pymongo=False, slugify=False, beautiful_soup=False, inquirer=False):
     try:
         if(colorama):
             import colorama
         import requests
         import nacl.utils
+        if(inquirer):
+            import inquirer
         if(ruamel_yaml):
             from ruamel.yaml import YAML    
         if(pymongo):

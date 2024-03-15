@@ -4,5 +4,6 @@ pynacl
 ruamel.yaml
 pymongo
 python-slugify
+inquirer
 bs4
 html5lib
