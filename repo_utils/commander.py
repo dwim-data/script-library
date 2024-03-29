@@ -2,6 +2,7 @@ import logging
 import os
 import platform
 import re
+import shutil
 import subprocess
 import sys
 from repo_utils.logger import script_logger
@@ -18,8 +19,15 @@ class SystemCommander:
     def is_linux(self):
         return platform.system() == 'Linux'
 
+    def ensure_system_command(self, command : str, url: str):
+        if(not self.system_has_command(command)):
+            raise RuntimeError(f'This script requires {command} to be installed and accessible within the current $PATH - please see {url}')
+
     def system_has_command(self, exec):
         try:
+            path = shutil.which(exec)
+            return path != None
+
             cmd = ('powershell Get-Command -Name ' + exec) if self.is_windows() else ('command -v ' + exec)
             self.exec_system_command(cmd)
             return True
@@ -193,3 +201,7 @@ class SystemCommander:
             sep = '\n------------------------------------------------------------------------'
             raise RuntimeError(
                 "Failed to execute command [{1}] returned: {0}\n{2}{0}".format(sep, cmd_display_raw, err)) from err
+
+    def open_file(self, file_path: str):
+        # TODO -- does this need to be handled differently on other OSes
+        self.exec_system_command_streamed(f'open {file_path}', log_level=logging.DEBUG)
