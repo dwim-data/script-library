@@ -19,9 +19,12 @@ class SystemCommander:
     def is_linux(self):
         return platform.system() == 'Linux'
 
-    def ensure_system_command(self, command : str, url: str):
+    def ensure_system_command(self, command : str, url: str, notes: str = None):
         if(not self.system_has_command(command)):
-            raise RuntimeError(f'This script requires {command} to be installed and accessible within the current $PATH - please see {url}')
+            additional_detail=''
+            if(notes != None):
+                additional_detail=f'\n\nNOTES:{notes}'
+            raise RuntimeError(f'This script requires {command} to be installed and accessible within the current $PATH - please see {url}{additional_detail}')
 
     def system_has_command(self, exec):
         try:
