@@ -11,6 +11,13 @@ for arg in sys.argv:
     if(arg == '-v'):
         level = logging.DEBUG
 
+# TODO this needs more testing...
+def to_masked_str(s : str, unmasked_len : int) -> str:
+    unmasked_length = min(unmasked_len, len(s) - 5)
+    masked_portion = "*" * (len(s) - unmasked_length)
+    masked_token = f'{s[0:unmasked_length]}{masked_portion}'
+    return masked_token
+
 class CustomFormatter(logging.Formatter):
 
     format = "[%(name)s:%(levelname)s] %(message)s (%(filename)s:%(lineno)d)" if level == logging.DEBUG else \
