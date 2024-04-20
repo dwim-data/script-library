@@ -13,7 +13,7 @@ version = read_file("VERSION")
 requirements = read_requirements("requirements.txt")
 
 setup(
-    name = 'script-library',
+    name = 'repo_utils',
     version = version,
     author = 'Eric LeVin',
     author_email = 'eric@ericlevin.me',
