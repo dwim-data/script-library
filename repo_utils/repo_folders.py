@@ -23,7 +23,7 @@ def get_main_entry_file() -> Path:
     return Path(os.path.realpath(sys.modules['__main__'].__file__))
 
 def get_repo_dir() -> Path:
-    dir = __get_repo_root(os.path.dirname(get_main_entry_file())) if os.environ.get('REPO_DIR',None) == None else Path(os.environ['REPO_DIR'])
+    dir = __get_repo_root(os.path.dirname(get_main_entry_file().absolute())) if os.environ.get('REPO_DIR',None) == None else Path(os.environ['REPO_DIR'])
     if dir.absolute().as_uri().endswith("script-library"):
         # We are within our checked out folder
         dir = __get_repo_root(dir.parent)
