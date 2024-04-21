@@ -6,6 +6,7 @@ import sys
 import tempfile
 from repo_utils.shared import logger
 
+
 def get_repo_root(at : Path):
     while(True):
         if(at.exists):
@@ -18,8 +19,10 @@ def get_repo_root(at : Path):
                 if(at.as_uri() == "file:///"):
                     return at
 
+def get_main_entry_file() -> Path:
+    return Path(os.path.dirname(os.path.realpath(sys.modules['__main__'].__file__)))
 
-repo_dir = get_repo_root(Path(os.path.dirname(os.path.realpath(sys.modules['__main__'].__file__)))) if os.environ.get('REPO_DIR',None) == None else Path(os.environ['REPO_DIR'])
+repo_dir = get_repo_root(get_main_entry_file()) if os.environ.get('REPO_DIR',None) == None else Path(os.environ['REPO_DIR'])
 if(repo_dir.absolute().as_uri().endswith("script-library")):
     # We are within our checked out folder
     repo_dir = get_repo_root(repo_dir.parent)
