@@ -7,7 +7,7 @@ import tempfile
 from repo_utils.shared import logger
 
 
-def get_repo_root(at : Path):
+def __get_repo_root(at : Path):
     while(True):
         if(at.exists):
             children = glob.glob(f'{at.absolute()}/.git', recursive=False)
@@ -22,14 +22,24 @@ def get_repo_root(at : Path):
 def get_main_entry_file() -> Path:
     return Path(os.path.dirname(os.path.realpath(sys.modules['__main__'].__file__)))
 
-repo_dir = get_repo_root(get_main_entry_file()) if os.environ.get('REPO_DIR',None) == None else Path(os.environ['REPO_DIR'])
-if(repo_dir.absolute().as_uri().endswith("script-library")):
-    # We are within our checked out folder
-    repo_dir = get_repo_root(repo_dir.parent)
+def get_repo_dir() -> Path:
+    dir = __get_repo_root(get_main_entry_file()) if os.environ.get('REPO_DIR',None) == None else Path(os.environ['REPO_DIR'])
+    if dir.absolute().as_uri().endswith("script-library"):
+        # We are within our checked out folder
+        dir = __get_repo_root(dir.parent)
+    return dir
 
-temp_dir = Path(os.path.join(repo_dir.absolute(), 'temp'))
-environment_dir = Path(os.path.join(repo_dir.absolute(), 'environments'))
+def get_temp_dir() -> Path:
+    return Path(os.path.join(get_repo_dir().absolute(), 'temp'))
 
+def get_repo_relative_dir(rel_path : str) -> Path:
+    return Path(os.path.join(get_repo_dir().absolute(), rel_path))
+
+repo_dir = get_repo_dir()
+temp_dir = get_temp_dir()
+
+#TODO -- this should be removed.
+environment_dir = get_repo_relative_dir('environments')
 def get_release_env_file(env: str, throw_on_not_found : bool = True):
     path = os.path.join(environment_dir.absolute(), f'default.{env}.yaml')
     if(not os.path.exists(path) and throw_on_not_found):
