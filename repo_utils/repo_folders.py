@@ -22,6 +22,10 @@ def __get_repo_root(at : Path):
 def get_main_entry_file() -> Path:
     return Path(os.path.realpath(sys.modules['__main__'].__file__))
 
+def to_repo_rel(path : Path) -> str:
+    rel_path = os.path.relpath(path.absolute(), get_repo_dir().absolute())
+    return f'{os.curdir}{os.sep}{rel_path}'
+
 def get_repo_dir() -> Path:
     dir = __get_repo_root(Path(os.path.dirname(get_main_entry_file()))) if os.environ.get('REPO_DIR',None) == None else Path(os.environ['REPO_DIR'])
     if dir.absolute().as_uri().endswith("script-library"):
