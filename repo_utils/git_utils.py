@@ -140,7 +140,7 @@ class GitVersionUtils:
         if(latest_tag):
             new_tag : Version = latest_tag
             if(major or minor or patch or build):
-                new_tag = new_tag.bump_build() if continuous_build else new_tag
+                new_tag = new_tag.bump_build() if continuous_build or build else new_tag
             if(major):
                 temp_tag = new_tag.bump_major()
                 new_tag = Version(temp_tag.major, temp_tag.minor, temp_tag.patch, temp_tag.prerelease, new_tag.build)
