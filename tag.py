@@ -15,7 +15,6 @@ parser = argparse.ArgumentParser(description='Build mobile application')
 parser.add_argument('--major', required=False, action='store_true', help="Increment the major version number")
 parser.add_argument('--minor', required=False, action='store_true', help="Increment the minor version number")
 parser.add_argument('--patch', required=False, action='store_true', help="Increment the patch version number")
-parser.add_argument('--build', required=False, action='store_true', help="Increment the build version number")
 
 
 def is_tagging_requested():
@@ -48,7 +47,7 @@ if __name__ == "__main__":
         r"tag.py"
     ])
     current_tag = git_version_utils.get_latest_version()
-    updated_tag = git_version_utils.increment_version_tags(current_tag, args.major, args.minor, args.patch, args.build)
+    updated_tag = git_version_utils.increment_version_tags(current_tag, args.major, args.minor, args.patch, False)
     logger.info(f'Setting updated version to {updated_tag}')
     update_release_version(dir=repo_dir, latest_tag=updated_tag)
     add_version_tag_and_push(dir=repo_dir, latest_tag=updated_tag)
