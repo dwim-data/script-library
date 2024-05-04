@@ -33,6 +33,44 @@ class GitUtils:
         files = [ file.strip().replace('M ','').strip() for file in files if len(file.strip()) > 0 ]
         return files
     
+    def ensure_git_uptodate(self, excluded_patterns = [], log_level=logging.DEBUG):
+        raw_modified_files = self.get_uncommitted_files(log_level)
+        modified_files = []
+        
+        for file in raw_modified_files:
+            include = True
+            for pattern in excluded_patterns:
+                match = re.search(pattern, file, re.MULTILINE)
+                if match:
+                    logger.log(level=log_level, msg=f'Git change [{file}] ignored given pattern [{str(pattern)}]')
+                    include = False
+                else:
+                    logger.log(level=log_level, msg=f'Git change [{file}] not ignored given pattern [{str(pattern)}]')
+            
+            if include:
+                modified_files.append(file)  
+        
+        if(len(modified_files) > 0):
+            results = '\n'.join(modified_files)
+            raise Exception(f'Please commit all changes to git.  Found the following changes:\n{results}\n')
+
+    def confirm_if_git_not_uptodate(self, log_level=logging.INFO):
+        modified_files = self.get_uncommitted_files(log_level)
+        modified_files = [ i for i in modified_files if not i.startswith("scripts/") and not i.startswith("submodules/")]
+        if(len(modified_files) > 0):
+            questions = [
+                inquirer.List(
+                    "Continue",
+                    message="Are you sure you wish to build with uncommitted changes?",
+                    choices=["yes", "no"],
+                )
+            ]
+            answers = inquirer.prompt(questions)
+            if(answers['Continue'] == "no"):
+                results = '\n'.join(modified_files)
+            raise Exception(f'Please commit all changes to git.  Found the following changes:\n{results}\n')
+
+    
 class GitInfo:
     def __init__(self, branch : str, commit_date : str, commit_hash : str, commit_hash_short):
         self.branch = branch
@@ -96,44 +134,6 @@ class GitVersionUtils:
         tags.sort(key=VersionSorter, reverse=True)
         return tags[0] if len(tags) > 0 else None
     
-    def ensure_git_uptodate(self, excluded_patterns = [], log_level=logging.DEBUG):
-        raw_modified_files = self.git.get_uncommitted_files(log_level)
-        modified_files = []
-        
-        for file in raw_modified_files:
-            include = True
-            for pattern in excluded_patterns:
-                match = re.search(pattern, file, re.MULTILINE)
-                if match:
-                    logger.log(level=log_level, msg=f'Git change [{file}] ignored given pattern [{str(pattern)}]')
-                    include = False
-                else:
-                    logger.log(level=log_level, msg=f'Git change [{file}] not ignored given pattern [{str(pattern)}]')
-            
-            if include:
-                modified_files.append(file)  
-        
-        if(len(modified_files) > 0):
-            results = '\n'.join(modified_files)
-            raise Exception(f'Please commit all changes to git.  Found the following changes:\n{results}\n')
-
-    def confirm_if_git_not_uptodate(self, log_level=logging.INFO):
-        modified_files = self.git.get_uncommitted_files(log_level)
-        modified_files = [ i for i in modified_files if not i.startswith("scripts/") and not i.startswith("submodules/")]
-        if(len(modified_files) > 0):
-            questions = [
-                inquirer.List(
-                    "Continue",
-                    message="Are you sure you wish to build with uncommitted changes?",
-                    choices=["yes", "no"],
-                )
-            ]
-            answers = inquirer.prompt(questions)
-            print(answers)
-            if(answers['Continue'] == "no"):
-                results = '\n'.join(modified_files)
-            raise Exception(f'Please commit all changes to git.  Found the following changes:\n{results}\n')
-
     def increment_version_tags(self, latest_tag: Version, major: bool, minor: bool, patch: bool, build: bool, continuous_build: bool = False):
         """Increments the major, minor, patch tags within a given version.  This will also increment and append the build number so that it is universal."""
         new_tag=None

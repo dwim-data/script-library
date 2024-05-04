@@ -44,7 +44,7 @@ if __name__ == "__main__":
        parser.print_usage()
        exit(1)
 
-    git_version_utils.ensure_git_uptodate(excluded_patterns=[
+    git_version_utils.git.ensure_git_uptodate(excluded_patterns=[
         r"tag.py"
     ])
     current_tag = git_version_utils.get_latest_version()
