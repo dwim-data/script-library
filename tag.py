@@ -22,15 +22,15 @@ def is_tagging_requested():
     return args.major or args.minor or args.patch or args.build
 
 
-def update_release_version(current_tag: Version):
-  with open(os.path.join(repo_dir.absolute(),'VERSION'), 'r+') as file:
+def update_release_version(dir:Path, latest_tag: Version):
+  with open(os.path.join(dir.absolute(),'VERSION'), 'r+') as file:
     file.seek(0)
-    file.write(str(current_tag))
+    file.write(str(latest_tag))
     file.truncate()
 
 def add_version_tag_and_push(dir:Path, latest_tag: Version):
   commander.exec_system_command(f'git add {version_file}', dir.absolute())
-  commander.exec_system_command(f'git commit -m "Updated version to {current_tag}"', dir.absolute())
+  commander.exec_system_command(f'git commit -m "Updated version to {latest_tag}"', dir.absolute())
   commander.exec_system_command(f'git tag -a "{latest_tag}" -m "Release {latest_tag}"', dir.absolute())
   commander.exec_system_command(f'git push', dir.absolute())
   commander.exec_system_command(f'git push --tags', dir.absolute())
@@ -45,17 +45,16 @@ if __name__ == "__main__":
        exit(1)
 
     git_version_utils.ensure_git_uptodate(excluded_patterns=[
-        # r".*?.py",
-        # r"VERSION"
+        r"tag.py"
     ])
     current_tag = git_version_utils.get_latest_version()
     updated_tag = git_version_utils.increment_version_tags(current_tag, args.major, args.minor, args.patch, args.build)
     logger.info(f'Setting updated version to {updated_tag}')
-    add_version_tag_and_push(repo_dir, updated_tag)
+    update_release_version(dir=repo_dir, latest_tag=updated_tag)
+    add_version_tag_and_push(dir=repo_dir, latest_tag=updated_tag)
 
     version_name = f'{updated_tag.major}.{updated_tag.minor}.{updated_tag.patch}'
-    build_num = int(updated_tag.build.replace('build.','')) if updated_tag.build != None else 0
-    logger.info(f'Updated version to [{version_name}] with build [{build_num}]')
+    logger.info(f'Updated version to [{version_name}]')
 
   except Exception as ex:
       logger.error(f'Failed: {ex}')
