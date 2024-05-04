@@ -143,11 +143,11 @@ class GitVersionUtils:
                 new_tag = new_tag.bump_build() if continuous_build or build else new_tag
             if(major):
                 temp_tag = new_tag.bump_major()
-                new_tag = Version(temp_tag.major, temp_tag.minor, temp_tag.patch, temp_tag.prerelease, new_tag.build)
+                new_tag = Version(temp_tag.major, temp_tag.minor, temp_tag.patch, temp_tag.prerelease, new_tag.build if continuous_build else None)
             if(minor):
                 temp_tag = new_tag.bump_minor()
-                new_tag = Version(temp_tag.major, temp_tag.minor, temp_tag.patch, temp_tag.prerelease, new_tag.build)
+                new_tag = Version(temp_tag.major, temp_tag.minor, temp_tag.patch, temp_tag.prerelease, new_tag.build if continuous_build else None)
             if(patch):
                 temp_tag = new_tag.bump_patch()
-                new_tag = Version(temp_tag.major, temp_tag.minor, temp_tag.patch, temp_tag.prerelease, new_tag.build)
+                new_tag = Version(temp_tag.major, temp_tag.minor, temp_tag.patch, temp_tag.prerelease, new_tag.build if continuous_build else None)
         return new_tag
