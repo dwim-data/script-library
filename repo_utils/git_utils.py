@@ -72,25 +72,22 @@ class GitUtils:
 
     
 class GitInfo:
-    def __init__(self, branch : str, commit_date : str, commit_hash : str, commit_hash_short):
-        self.branch = branch
+    def __init__(self, commit_date : str, commit_hash : str, commit_hash_short):
         self.commit_date = commit_date
         self.commit_hash = commit_hash
         self.commit_hash_short = commit_hash_short
 
     def __str__(self):
-     return f'branch=[{self.branch}], commit_date=[{self.commit_date}], commit_hash_short=[{self.commit_hash_short}], commit_hash=[{self.commit_hash}]'
+     return f'commit_date=[{self.commit_date}], commit_hash_short=[{self.commit_hash_short}], commit_hash=[{self.commit_hash}]'
 
 class GitInfoArgs:
     def add_git_args(parser : argparse.ArgumentParser):
-        parser.add_argument('--git-branch', default=None, help="The git branch to use, if not, will pull from the git repo")
         parser.add_argument('--git-commit-date', default=None, help="The git commit date to use, if not, will pull from the git repo")
         parser.add_argument('--git-commit-hash', default=None, help="The git commit hash to use, if not, will pull from the git repo")
         parser.add_argument('--git-commit-hash-short', default=None, help="The git commit short hash to use, if not, will pull from the git repo")
 
     def get_git_info(args: argparse.Namespace, git: GitUtils) -> GitInfo:
         return GitInfo(
-           branch=args.git_branch if args.git_branch != None else git.get_branch(),
            commit_date=args.git_commit_date if args.git_commit_date != None else git.get_commit_date(),
            commit_hash=args.git_commit_hash if args.git_commit_hash != None else git.get_commit_hash(),
            commit_hash_short=args.git_commit_hash_short if args.git_commit_hash_short != None else git.get_commit_hash_short(),
