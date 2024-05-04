@@ -68,7 +68,7 @@ class GitUtils:
             answers = inquirer.prompt(questions)
             if(answers['Continue'] == "no"):
                 results = '\n'.join(modified_files)
-            raise Exception(f'Please commit all changes to git.  Found the following changes:\n{results}\n')
+                raise Exception(f'Please commit all changes to git.  Found the following changes:\n{results}\n')
 
     
 class GitInfo:
