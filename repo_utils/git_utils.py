@@ -93,10 +93,18 @@ class GitInfoArgs:
            commit_hash_short=args.git_commit_hash_short if args.git_commit_hash_short != None else git.get_commit_hash_short(),
         )
         
-
 class VersionSorter:
     def __init__(self, obj: Version, *args):
         self.version = obj
+
+    def get_build_as_int(self, version: Version):
+       if(version.build == None):
+          return 0
+       if(version.build.startswith('build.')):
+          str = version.build.replace('build.','')
+          return int(str)
+       return version.build
+
     def __lt__(self, other):
         if(self.version.major != other.version.major):
             # print(f'{self.version.major} < {other.version.major}')
@@ -107,11 +115,11 @@ class VersionSorter:
         elif(self.version.patch != other.version.patch):
             # print(f'{self.version.patch} < {other.version.patch}')
             return self.version.patch < other.version.patch
-        elif(self.version.build == None or other.version.build == None):
-            return True
         elif(self.version.build != other.version.build):
-            # print(f'{self.version.build} < {other.version.build}')
-            return self.version.build < other.version.build
+            less_than = self.get_build_as_int(self.version) < self.get_build_as_int(other.version)
+            # print(f'[{self.version.build}] < [{other.version.build}] = {less_than}')
+            return less_than
+        return False
 
 class GitVersionUtils:
     def __init__(self, directory : Path):
