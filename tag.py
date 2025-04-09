@@ -16,6 +16,10 @@ parser.add_argument('--minor', required=False, action='store_true', help="Increm
 parser.add_argument('--patch', required=False, action='store_true', help="Increment the patch version number")
 
 
+def is_tagging_requested():
+    return args.major or args.minor or args.patch
+
+
 def update_release_version(dir:Path, latest_tag: Version):
   with open(os.path.join(dir.absolute(),'VERSION'), 'r+') as file:
     file.seek(0)
@@ -33,14 +37,21 @@ def add_version_tag_and_push(dir:Path, latest_tag: Version):
 if __name__ == "__main__":
   try:
     args = parser.parse_args()
+    if(not is_tagging_requested()):
+       parser.print_help()
+       parser.print_usage()
+       exit(1)
+
     git_version_utils.git.ensure_git_uptodate(excluded_patterns=[
         r"tag.py"
     ])
     current_tag = git_version_utils.get_latest_version()
+    logger.info(f'Current version is {current_tag}')
+
     updated_tag = git_version_utils.increment_version_tags(current_tag, args.major, args.minor, args.patch, False)
     logger.info(f'Setting updated version to {updated_tag}')
     update_release_version(dir=repo_dir, latest_tag=updated_tag)
-    # add_version_tag_and_push(dir=repo_dir, latest_tag=updated_tag)
+    add_version_tag_and_push(dir=repo_dir, latest_tag=updated_tag)
 
     version_name = f'{updated_tag.major}.{updated_tag.minor}.{updated_tag.patch}'
     logger.info(f'Updated version to [{version_name}]')
